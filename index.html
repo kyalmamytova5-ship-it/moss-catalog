@@ -9,7 +9,7 @@
         :root { --moss: #2d5a27; --dark: #1a1a1a; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background: #f4f4f4; color: var(--dark); }
         header { 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://avatars.mds.yandex.net'); 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com'); 
             height: 40vh; background-size: cover; background-position: center; 
             display: flex; align-items: center; justify-content: center; text-align: center; color: white; 
         }
@@ -26,26 +26,8 @@
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
         input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
         footer { background: var(--dark); color: white; padding: 30px; text-align: center; }
-        /* Стиль для строки товара и кнопки удаления */
-.cart-item-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 10px; 
-    padding-bottom: 5px; 
-    border-bottom: 1px solid #eee;
-}
-.remove-btn { 
-    background: #ff4d4d; 
-    color: white; 
-    border: none; 
-    border-radius: 5px; 
-    padding: 2px 8px; 
-    cursor: pointer; 
-    font-size: 0.8rem;
-}
-.remove-btn:hover { background: #cc0000; }
-
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
+        .remove-btn { background: #ff4d4d; color: white; border: none; border-radius: 5px; padding: 4px 10px; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -60,24 +42,27 @@
 
 <div class="container">
     <div class="grid">
+        <!-- КАРТОЧКА 1 -->
         <div class="card">
-            <img src="https://avatars.mds.yandex.net">
+            <img src="https://mox.com.ua">
             <div class="card-info">
                 <h3>Панно "Круг"</h3>
                 <span class="price">4500 сом</span>
                 <button class="btn" onclick="add('Панно Круг', 4500)">В корзину</button>
             </div>
         </div>
+        <!-- КАРТОЧКА 2 -->
         <div class="card">
-            <img src="https://avatars.mds.yandex.net">
+            <img src="https://art-mox.ru">
             <div class="card-info">
                 <h3>Часы из мха</h3>
                 <span class="price">6800 сом</span>
                 <button class="btn" onclick="add('Часы из мха', 6800)">В корзину</button>
             </div>
         </div>
+        <!-- КАРТОЧКА 3 -->
         <div class="card">
-            <img src="https://avatars.mds.yandex.net">
+            <img src="https://static.tildacdn.com">
             <div class="card-info">
                 <h3>Декор в кашпо</h3>
                 <span class="price">1200 сом</span>
@@ -113,31 +98,25 @@
         document.getElementById('total').innerText = sum; 
     }
 
-    // Функция удаления одного товара
-        // Исправленная функция удаления
     function removeItem(index) {
-        sum -= cart[index].p; // Вычитаем цену удаляемого товара
-        cart.splice(index, 1); // Удаляем товар из массива по индексу
-        
-        update(); // Обновляем цифры в виджете (в углу)
-
-        if (cart.length === 0) {
-            closeM(); // Если товаров не осталось, закрываем корзину
+        sum -= cart[index].p;
+        cart.splice(index, 1);
+        update();
+        if(cart.length === 0) {
+            closeM();
         } else {
-            showModal(); // Перерисовываем список товаров в открытом окне
+            showModal(); 
         }
     }
 
     function showModal() { 
-        if (cart.length === 0) return alert("Корзина пуста");
-        
+        if(!cart.length) return alert("Корзина пуста");
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('modal').style.display = 'block';
         
-        // Генерируем список с исправленной кнопкой
-        let listHtml = cart.map((item, index) => `
+        let listHtml = cart.map((i, index) => `
             <div class="cart-item-row">
-                <span>${item.n} (${item.p} сом)</span>
+                <span>${i.n} (${i.p}с)</span>
                 <button class="remove-btn" onclick="removeItem(${index})">Отмена</button>
             </div>
         `).join('');
@@ -145,7 +124,6 @@
         document.getElementById('list').innerHTML = listHtml;
         document.getElementById('m-total').innerText = sum;
     }
-
 
     function closeM() { 
         document.getElementById('overlay').style.display = 'none'; 
@@ -155,18 +133,15 @@
     function send() {
         let name = document.getElementById('name').value;
         if(!name) return alert("Пожалуйста, введите имя");
-        
         let itemsText = cart.map(i => `- ${i.n} (${i.p}с)`).join('%0A');
         let finalMessage = `Здравствуйте! Заказ от ${name}:%0A${itemsText}%0A%0AИтого: ${sum} сом`;
-        
         let url = "https://wa.me" + myNumber + "?text=" + finalMessage;
         window.open(url, '_blank');
-        
         cart = []; sum = 0; update(); closeM();
     }
 </script>
-
 </body>
 </html>
+
 
 
