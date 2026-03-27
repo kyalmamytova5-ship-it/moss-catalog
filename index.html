@@ -8,26 +8,37 @@
     <style>
         :root { --moss: #2d5a27; --dark: #1a1a1a; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background: #f4f4f4; color: var(--dark); }
+        
         header { 
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com'); 
             height: 40vh; background-size: cover; background-position: center; 
             display: flex; align-items: center; justify-content: center; text-align: center; color: white; 
         }
+
         .cart-widget { position: fixed; top: 20px; right: 20px; background: var(--moss); color: white; padding: 12px 20px; border-radius: 50px; cursor: pointer; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: bold; }
+        
         .container { max-width: 1100px; margin: -40px auto 50px; padding: 0 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
         .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; text-align: center; }
         .card:hover { transform: translateY(-10px); }
         .card img { width: 100%; height: 250px; object-fit: cover; }
         .card-info { padding: 20px; }
+        
         .price { font-size: 1.5rem; color: var(--moss); font-weight: 700; margin: 10px 0; display: block; }
-        .btn { background: var(--moss); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn { background: var(--moss); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
+        .btn:hover { background: #3a7532; }
+
+        /* Стили модального окна */
         .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; z-index: 1000; width: 90%; max-width: 400px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
-        footer { background: var(--dark); color: white; padding: 30px; text-align: center; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
         .remove-btn { background: #ff4d4d; color: white; border: none; border-radius: 5px; padding: 4px 10px; cursor: pointer; font-size: 0.8rem; }
+        
+        footer { background: var(--dark); color: white; padding: 30px; text-align: center; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -42,27 +53,27 @@
 
 <div class="container">
     <div class="grid">
-        <!-- КАРТОЧКА 1 -->
+        <!-- Товар 1 -->
         <div class="card">
-            <img src="https://mox.com.ua">
+            <img src="panno.jpg" alt="Панно Круг">
             <div class="card-info">
                 <h3>Панно "Круг"</h3>
                 <span class="price">4500 сом</span>
                 <button class="btn" onclick="add('Панно Круг', 4500)">В корзину</button>
             </div>
         </div>
-        <!-- КАРТОЧКА 2 -->
+        <!-- Товар 2 -->
         <div class="card">
-            <img src="https://art-mox.ru">
+            <img src="chasy.jpg" alt="Часы из мха">
             <div class="card-info">
                 <h3>Часы из мха</h3>
                 <span class="price">6800 сом</span>
                 <button class="btn" onclick="add('Часы из мха', 6800)">В корзину</button>
             </div>
         </div>
-        <!-- КАРТОЧКА 3 -->
+        <!-- Товар 3 -->
         <div class="card">
-            <img src="https://static.tildacdn.com">
+            <img src="6239541630.jpg" alt="Декор в кашпо">
             <div class="card-info">
                 <h3>Декор в кашпо</h3>
                 <span class="price">1200 сом</span>
@@ -73,19 +84,23 @@
 </div>
 
 <div class="overlay" id="overlay" onclick="closeM()"></div>
+
 <div class="modal" id="modal">
     <h3>Ваш заказ</h3>
-    <div id="list" style="margin-bottom: 15px; font-size: 0.9rem;"></div>
+    <div id="list" style="margin-bottom: 15px; max-height: 200px; overflow-y: auto;"></div>
     <p><strong>Итого: <span id="m-total">0</span> сом</strong></p>
-    <input type="text" id="name" placeholder="Введите ваше имя">
-    <button class="btn" onclick="send()">Оформить в WhatsApp</button>
+    
+    <input type="text" id="name" placeholder="Ваше имя">
+    <input type="text" id="phone" placeholder="Ваш номер телефона">
+    
+    <button class="btn" style="margin-top: 10px;" onclick="send()">Оформить в WhatsApp</button>
 </div>
 
 <footer><p>© 2024 Moss Art KG</p></footer>
 
 <script>
     let cart = [], sum = 0;
-    const myNumber = "996706564446";
+    const myNumber = "996706262322";
 
     function add(n, p) { 
         cart.push({n, p}); 
@@ -98,6 +113,7 @@
         document.getElementById('total').innerText = sum; 
     }
 
+    // Исправленная функция удаления
     function removeItem(index) {
         sum -= cart[index].p;
         cart.splice(index, 1);
@@ -114,6 +130,7 @@
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('modal').style.display = 'block';
         
+        // Генерируем список с кнопкой Отмена
         let listHtml = cart.map((i, index) => `
             <div class="cart-item-row">
                 <span>${i.n} (${i.p}с)</span>
@@ -132,16 +149,20 @@
 
     function send() {
         let name = document.getElementById('name').value;
-        if(!name) return alert("Пожалуйста, введите имя");
+        let phone = document.getElementById('phone').value;
+
+        if(!name || !phone) return alert("Пожалуйста, заполните имя и номер");
+        
         let itemsText = cart.map(i => `- ${i.n} (${i.p}с)`).join('%0A');
-        let finalMessage = `Здравствуйте! Заказ от ${name}:%0A${itemsText}%0A%0AИтого: ${sum} сом`;
+        let finalMessage = `Здравствуйте! Заказ от ${name}:%0AТелефон: ${phone}%0A%0AТовары:%0A${itemsText}%0A%0AИтого: ${sum} сом`;
+        
         let url = "https://wa.me" + myNumber + "?text=" + finalMessage;
         window.open(url, '_blank');
+        
+        // Очистка
         cart = []; sum = 0; update(); closeM();
     }
 </script>
+
 </body>
 </html>
-
-
-
