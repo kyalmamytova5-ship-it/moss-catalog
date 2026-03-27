@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moss Decor Idea | Мастерская уюта</title>
+    
+    <!-- Превью для соцсетей (Open Graph) -->
+    <meta property="og:title" content="Moss Decor Idea — Изделия из мха">
+    <meta property="og:description" content="Живой декор для вашего интерьера. Не требует полива. Закажите в 1 клик!">
+    <meta property="og:image" content="https://images.unsplash.com">
+    
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+
+    <style>
+        :root { --moss: #2d5a27; --dark: #1a1a1a; --white: #ffffff; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: #f9f9f9; color: var(--dark); scroll-behavior: smooth; }
+        
+        /* Шапка */
+        header { 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com'); 
+            height: 60vh; background-size: cover; background-position: center; 
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white; 
+        }
+
+        /* Виджет корзины */
+        .cart-widget { 
+            position: fixed; top: 20px; right: 20px; background: var(--moss); color: white; 
+            padding: 12px 25px; border-radius: 50px; cursor: pointer; z-index: 100; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); font-weight: 600;
+        }
+
+        /* Сетка товаров */
+        .container { max-width: 1200px; margin: -50px auto 50px; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; text-align: center; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-info { padding: 20px; }
+        .price { font-size: 1.4rem; color: var(--moss); font-weight: 700; margin: 10px 0; display: block; }
+
+        /* Кнопки */
+        .btn { background: var(--moss); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; }
+        .btn:hover { background: #1e3d1a; }
+
+        /* Модальное окно */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; z-index: 1000; width: 90%; max-width: 400px; }
+        .modal input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+
+        footer { background: var(--dark); color: white; padding: 40px; text-align: center; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="cart-widget" onclick="showModal()">
+    🛒 Корзина: <span id="cart-count">0</span> | <span id="cart-total">0</span> ₽
+</div>
+
+<header>
+    <div>
+        <h1>Moss Decor Idea</h1>
+        <p>Натуральный мох для вашего интерьера</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="grid">
+        <!-- Товар 1 -->
+        <div class="card">
+            <img src="./панно.jpg" alt="Панно">
+            <div class="card-info">
+                <h3>Панно "Лесной Круг"</h3>
+                <p>Диаметр 40 см, три вида мха</p>
+                <span class="price">4 500 ₽</span>
+                <button class="btn" onclick="addToCart('Панно Лесной Круг', 4500)">В корзину</button>
+            </div>
+        </div>
+
+        <!-- Товар 2 -->
+        <div class="card">
+            <img src="./часы.jpg" alt="Часы">
+            <div class="card-info">
+                <h3>Часы из мха</h3>
+                <p>Бесшумный ход, дерево дуб</p>
+                <span class="price">6 800 ₽</span>
+                <button class="btn" onclick="addToCart('Часы из мха', 6800)">В корзину</button>
+            </div>
+        </div>
+
+        <!-- Товар 3 -->
+        <div class="card">
+            <img src="./6239541630.jpg" alt="Кашпо">
+            <div class="card-info">
+                <h3>Кашпо Cube</h3>
+                <p>Мини-декор для вашего стола</p>
+                <span class="price">1 200 ₽</span>
+                <button class="btn" onclick="addToCart('Кашпо Cube', 1200)">В корзину</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+    <h3>Ваш заказ</h3>
+    <div id="cart-items" style="margin-bottom: 20px; font-size: 0.9rem;"></div>
+    <p><strong>Итого: <span id="modal-total">0</span> ₽</strong></p>
+    <input type="text" id="user-name" placeholder="Ваше имя">
+    <input type="tel" id="user-phone" placeholder="Ваш телефон">
+    <button class="btn" onclick="sendToWhatsApp()">Заказать через WhatsApp</button>
+</div>
+
+<footer>
+    <p>Создано для Moss Decor Idea © 2024</p>
+    <p>Свяжитесь с нами для индивидуальных заказов</p>
+</footer>
+
+<script>
+    let cart = [];
+    let total = 0;
+    const myNumber = "996706564446"; // ЗАМЕНИТЕ НА ВАШ НОМЕР БЕЗ +
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        total += price;
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('cart-count').innerText = cart.length;
+        document.getElementById('cart-total').innerText = total;
+    }
+
+    function showModal() {
+        if(cart.length === 0) return alert("Добавьте товары в корзину!");
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal').style.display = 'block';
+        
+        let itemsHtml = cart.map(i => `<div>• ${i.name} (${i.price}₽)</div>`).join('');
+        document.getElementById('cart-items').innerHTML = itemsHtml;
+        document.getElementById('modal-total').innerText = total;
+    }
+
+    function closeModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    function sendToWhatsApp() {
+        const name = document.getElementById('user-name').value;
+        const phone = document.getElementById('user-phone').value;
+
+        if(!name || !phone) return alert("Заполните данные для связи!");
+
+        let itemsText = cart.map((i, index) => `${index + 1}. ${i.name} - ${i.price}р`).join('%0A');
+        let text = `Здравствуйте! Новый заказ с сайта:%0A%0A` +
+                   `*Имя:* ${name}%0A` +
+                   `*Телефон:* ${phone}%0A%0A` +
+                   `*Заказ:*%0A${itemsText}%0A%0A` +
+                   `*Итого:* ${total} руб.`;
+
+        window.open(`https://wa.me{myNumber}?text=${text}`, '_blank');
+        
+        cart = []; total = 0; updateUI(); closeModal();
+    }
+</script>
+
+</body>
+</html>
